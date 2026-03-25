@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Square Eater"
+version = "1.0.0"
+id = "artifacts/square-eater"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22360
+
+[services.development]
+run = "pnpm --filter @workspace/square-eater run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/square-eater", "run", "build" ]
+publicDir = "artifacts/square-eater/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22360"
+BASE_PATH = "/"
