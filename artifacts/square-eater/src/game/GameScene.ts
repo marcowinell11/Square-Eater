@@ -463,6 +463,34 @@ export class GameScene extends Phaser.Scene {
 
   // ─── Wall Collision ────────────────────────────────────────────────────────
 
+  // After growing, snap the player out of any wall they now overlap.
+  private pushOutOfWalls() {
+    if (!this.mazeGrid) return;
+    if (!this.hitsMazeWall(this.player.x, this.player.y, this.playerSize)) return;
+
+    const gx = Math.floor(this.player.x / CELL_SIZE);
+    const gy = Math.floor(this.player.y / CELL_SIZE);
+
+    // Spiral outward from current cell until we find an open cell center that fits
+    for (let r = 0; r <= 3; r++) {
+      for (let dy = -r; dy <= r; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          if (Math.abs(dx) !== r && Math.abs(dy) !== r) continue; // border only
+          const cx = gx + dx;
+          const cy = gy + dy;
+          if (cx < 0 || cx >= this.gridW || cy < 0 || cy >= this.gridH) continue;
+          if (this.mazeGrid[cy][cx] !== 1) continue;
+          const nx = (cx + 0.5) * CELL_SIZE;
+          const ny = (cy + 0.5) * CELL_SIZE;
+          if (!this.hitsMazeWall(nx, ny, this.playerSize)) {
+            this.player.setPosition(nx, ny);
+            return;
+          }
+        }
+      }
+    }
+  }
+
   private hitsMazeWall(cx: number, cy: number, size: number): boolean {
     if (!this.mazeGrid) return false;
     const half = size / 2 - 1; // 1px inset to allow snug corridor navigation
@@ -510,6 +538,7 @@ export class GameScene extends Phaser.Scene {
           this.playerSize + growBy,
           this.mazeGrid ? CELL_SIZE * 0.88 : 999
         );
+        this.pushOutOfWalls();
       } else {
         if (this.phase === "eat-big") {
           toRemove.push(npc);
@@ -518,6 +547,7 @@ export class GameScene extends Phaser.Scene {
             this.playerSize + growBy,
             this.mazeGrid ? CELL_SIZE * 0.88 : 999
           );
+          this.pushOutOfWalls();
         } else {
           this.triggerDeath();
           return;
@@ -539,6 +569,7 @@ export class GameScene extends Phaser.Scene {
       } else {
         this.playerSize = Math.max(this.playerSize, ARENA_BIG_SIZE + 5);
       }
+      this.pushOutOfWalls();
       this.player.setFillStyle(0x00ffaa);
       this.player.setStrokeStyle(2, 0x00aa66);
       for (const npc of this.npcs) {
