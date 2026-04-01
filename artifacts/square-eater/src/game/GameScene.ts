@@ -581,9 +581,9 @@ export class GameScene extends Phaser.Scene {
     this.player.setFillStyle(0xff0000);
     this.overlay.setFillStyle(0x000000, 0.75);
     this.overlayText.setText("GAME OVER").setColor("#ff4455");
-    this.subText.setText("You touched a bigger square!\nPress R to restart from Level 1");
+    this.subText.setText(`You touched a bigger square!\nPress R to retry Level ${this.currentLevel}`);
     this.input.keyboard!.once("keydown-R", () => {
-      this.scene.restart({ level: 1, startZoom: 1 });
+      this.scene.restart({ level: this.currentLevel, startZoom: 1 });
     });
   }
 
