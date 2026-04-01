@@ -37,7 +37,7 @@ export default function Game() {
           Square Eater
         </h1>
         <p className="text-xs text-gray-500 font-mono mt-1">
-          Arrow keys or WASD to move &bull; Eat smaller squares &bull; Avoid bigger ones
+          Arrow keys or WASD to move &bull; 11 levels &bull; Eat smaller squares &bull; Avoid bigger ones
         </p>
       </div>
       <div
@@ -46,7 +46,7 @@ export default function Game() {
       />
       <div className="mt-3 flex gap-6 text-xs font-mono text-gray-500">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 bg-yellow-400 rounded-sm" /> Small (eat these)
+          <span className="inline-block w-3 h-3 bg-yellow-400 rounded-sm" /> Small (eat these first)
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-sm" style={{ background: "#00e5ff" }} /> You
