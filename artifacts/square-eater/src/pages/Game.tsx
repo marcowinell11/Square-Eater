@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Phaser from "phaser";
+import { MenuScene } from "../game/MenuScene";
 import { GameScene } from "../game/GameScene";
 
 export default function Game() {
@@ -15,7 +16,7 @@ export default function Game() {
       height: 600,
       backgroundColor: "#0a0a1a",
       parent: containerRef.current,
-      scene: [GameScene],
+      scene: [MenuScene, GameScene],
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,

@@ -291,10 +291,13 @@ export class GameScene extends Phaser.Scene {
     this.player.setFillStyle(0xff0000);
     this.overlay.setFillStyle(0x000000, 0.75);
     this.overlayText.setText("GAME OVER").setColor("#ff4455");
-    this.subText.setText(`You touched a bigger square!\nPress R to retry Level ${this.currentLevel}`);
+    this.subText.setText(`You touched a bigger square!\nR — retry Level ${this.currentLevel}   M — main menu`);
 
     this.input.keyboard!.once("keydown-R", () => {
       this.scene.restart({ level: this.currentLevel });
+    });
+    this.input.keyboard!.once("keydown-M", () => {
+      this.scene.start("MenuScene");
     });
   }
 
@@ -315,10 +318,13 @@ export class GameScene extends Phaser.Scene {
     this.player.setFillStyle(0xffdd00);
     this.overlay.setFillStyle(0x000000, 0.75);
     this.overlayText.setText("YOU WIN!").setColor("#ffdd00");
-    this.subText.setText("All 11 levels conquered!\nPress R to play again");
+    this.subText.setText("All 11 levels conquered!\nR — play again   M — main menu");
 
     this.input.keyboard!.once("keydown-R", () => {
       this.scene.restart({ level: 1 });
+    });
+    this.input.keyboard!.once("keydown-M", () => {
+      this.scene.start("MenuScene");
     });
   }
 }
