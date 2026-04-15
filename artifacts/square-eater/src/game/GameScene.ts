@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { playMusic, playSfx, stopMusic, AUDIO_KEYS } from "./AudioManager";
 
 const SPEED = 160;
 const BASE_SIZE = 30;
@@ -48,6 +49,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    playMusic(AUDIO_KEYS.gameMusic);
     this.gameOver = false;
     this.phase = "eat-small";
     this.playerSize = BASE_SIZE;
@@ -217,10 +219,12 @@ export class GameScene extends Phaser.Scene {
       if (npc.sizeCategory === "small") {
         toRemove.push(npc);
         this.playerSize += 3;
+        playSfx(AUDIO_KEYS.eatSound);
       } else {
         if (this.phase === "eat-big") {
           toRemove.push(npc);
           this.playerSize += 8;
+          playSfx(AUDIO_KEYS.eatSound);
         } else {
           this.triggerDeath();
           return;
@@ -288,6 +292,8 @@ export class GameScene extends Phaser.Scene {
 
   private triggerDeath() {
     this.gameOver = true;
+    stopMusic();
+    playSfx(AUDIO_KEYS.loseSound);
     this.player.setFillStyle(0xff0000);
     this.overlay.setFillStyle(0x000000, 0.75);
     this.overlayText.setText("GAME OVER").setColor("#ff4455");
@@ -315,6 +321,8 @@ export class GameScene extends Phaser.Scene {
 
   private triggerWin() {
     this.gameOver = true;
+    stopMusic();
+    playSfx(AUDIO_KEYS.victorySound);
     this.player.setFillStyle(0xffdd00);
     this.overlay.setFillStyle(0x000000, 0.75);
     this.overlayText.setText("YOU WIN!").setColor("#ffdd00");

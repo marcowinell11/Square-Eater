@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { playMusic, AUDIO_KEYS } from "./AudioManager";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
@@ -9,6 +10,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    playMusic(AUDIO_KEYS.menuMusic);
     // Background
     this.add.rectangle(CANVAS_W / 2, CANVAS_H / 2, CANVAS_W, CANVAS_H, 0x0a0a1a);
     this.add.grid(0, 0, CANVAS_W * 2, CANVAS_H * 2, 40, 40, 0x0a0a1a, 0, 0x1a1a3a, 0.4).setOrigin(0, 0);
