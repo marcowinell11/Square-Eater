@@ -37,12 +37,48 @@ const FILE_MAP: Record<AudioKey, string> = {
   victorySound: `${BASE}audio/Victory Sound.wav`,
 };
 
+// ─── Settings (persisted to localStorage) ────────────────────────────────────
+
+const STORAGE_KEY = "squareEaterAudio";
+
+interface AudioSettings { music: boolean; sfx: boolean; }
+
+function loadSettings(): AudioSettings {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return { music: true, sfx: true, ...JSON.parse(raw) };
+  } catch { /* ignore */ }
+  return { music: true, sfx: true };
+}
+
+function saveSettings(s: AudioSettings) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch { /* ignore */ }
+}
+
+let settings = loadSettings();
+
+export function isMusicEnabled() { return settings.music; }
+export function isSfxEnabled()   { return settings.sfx;   }
+
+export function setMusicEnabled(on: boolean) {
+  settings.music = on;
+  saveSettings(settings);
+  if (!on) stopMusic();
+  // if turning on, caller is responsible for calling playMusic() again
+}
+
+export function setSfxEnabled(on: boolean) {
+  settings.sfx = on;
+  saveSettings(settings);
+}
+
 // ─── Background Music ─────────────────────────────────────────────────────────
 
 let bgEl: HTMLAudioElement | null = null;
 let bgKey: AudioKey | null = null;
 
 export function playMusic(key: AudioKey, volume = 0.5) {
+  if (!settings.music) return;
   if (bgEl && bgKey === key && !bgEl.paused) return;  // already playing
   stopMusic();
 
@@ -63,9 +99,15 @@ export function stopMusic() {
   }
 }
 
+/** Resume background music if music is enabled and a key was previously set. */
+export function resumeMusic(key: AudioKey, volume = 0.5) {
+  if (settings.music) playMusic(key, volume);
+}
+
 // ─── Sound Effects ────────────────────────────────────────────────────────────
 
 export function playSfx(key: AudioKey, volume = 1) {
+  if (!settings.sfx) return;
   try {
     const el = new Audio(FILE_MAP[key]);
     el.volume = volume;
