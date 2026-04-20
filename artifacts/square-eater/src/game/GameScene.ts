@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { playMusic, playSfx, stopMusic, AUDIO_KEYS } from "./AudioManager";
+import { saveProgress, clearProgress } from "./Progress";
 
 const SPEED = 160;
 const BASE_SIZE = 30;
@@ -31,6 +32,7 @@ export class GameScene extends Phaser.Scene {
   };
   private playerSize = BASE_SIZE;
   private phase: "eat-small" | "eat-big" = "eat-small";
+  private unloadHandler: (() => void) | null = null;
   private statusText!: Phaser.GameObjects.Text;
   private sizeText!: Phaser.GameObjects.Text;
   private levelText!: Phaser.GameObjects.Text;
@@ -95,6 +97,18 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(11);
 
     this.updateHUD();
+
+    // Save progress if the player closes the tab or navigates away mid-game
+    if (this.unloadHandler) window.removeEventListener("beforeunload", this.unloadHandler);
+    this.unloadHandler = () => saveProgress(this.currentLevel);
+    window.addEventListener("beforeunload", this.unloadHandler);
+  }
+
+  shutdown() {
+    if (this.unloadHandler) {
+      window.removeEventListener("beforeunload", this.unloadHandler);
+      this.unloadHandler = null;
+    }
   }
 
   // ─── NPC Spawning ────────────────────────────────────────────────────────────
@@ -292,6 +306,7 @@ export class GameScene extends Phaser.Scene {
 
   private triggerDeath() {
     this.gameOver = true;
+    saveProgress(this.currentLevel);  // remember where they were
     stopMusic();
     playSfx(AUDIO_KEYS.loseSound);
     this.player.setFillStyle(0xff0000);
@@ -309,18 +324,24 @@ export class GameScene extends Phaser.Scene {
 
   private triggerLevelComplete() {
     this.gameOver = true;
+    const nextLevel = this.currentLevel + 1;
+    saveProgress(nextLevel);  // advance save to the next level
     this.player.setFillStyle(0xffdd00);
     this.overlay.setFillStyle(0x000000, 0.6);
     this.overlayText.setText(`LEVEL ${this.currentLevel} CLEAR!`).setColor("#ffdd00");
-    this.subText.setText(`Get ready for Level ${this.currentLevel + 1}\nPress R to continue`);
+    this.subText.setText(`Get ready for Level ${nextLevel}\nR — continue   M — main menu`);
 
     this.input.keyboard!.once("keydown-R", () => {
-      this.scene.restart({ level: this.currentLevel + 1 });
+      this.scene.restart({ level: nextLevel });
+    });
+    this.input.keyboard!.once("keydown-M", () => {
+      this.scene.start("MenuScene");
     });
   }
 
   private triggerWin() {
     this.gameOver = true;
+    clearProgress();  // game fully beaten — wipe the save
     stopMusic();
     playSfx(AUDIO_KEYS.victorySound);
     this.player.setFillStyle(0xffdd00);

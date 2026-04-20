@@ -4,6 +4,7 @@ import {
   isMusicEnabled, isSfxEnabled,
   setMusicEnabled, setSfxEnabled,
 } from "./AudioManager";
+import { loadProgress, clearProgress } from "./Progress";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
@@ -51,24 +52,57 @@ export class MenuScene extends Phaser.Scene {
       }).setOrigin(0, 0.5);
     });
 
-    // ── Start button ──────────────────────────────────────────────────────────
-    const startBg = this.add.rectangle(CANVAS_W / 2, 500, 220, 54, 0x00e5ff)
-      .setInteractive({ useHandCursor: true });
-    this.add.text(CANVAS_W / 2, 500, "START GAME", {
-      fontSize: "20px", color: "#0a0a1a", fontFamily: "monospace", fontStyle: "bold",
-    }).setOrigin(0.5).setDepth(1);
+    // ── Buttons (layout shifts if saved progress exists) ──────────────────────
+    const savedLevel = loadProgress();
+    const hasSave    = savedLevel > 1;
 
-    startBg.on("pointerover",  () => startBg.setFillStyle(0x80ffff));
-    startBg.on("pointerout",   () => startBg.setFillStyle(0x00e5ff));
-    startBg.on("pointerdown",  () => startBg.setFillStyle(0x009ab0));
-    startBg.on("pointerup",    () => this.scene.start("GameScene", { level: 1 }));
+    if (hasSave) {
+      // Continue button (primary)
+      const contBg = this.add.rectangle(CANVAS_W / 2, 466, 280, 54, 0x00ffaa)
+        .setInteractive({ useHandCursor: true });
+      this.add.text(CANVAS_W / 2, 466, `CONTINUE  (Level ${savedLevel})`, {
+        fontSize: "18px", color: "#0a0a1a", fontFamily: "monospace", fontStyle: "bold",
+      }).setOrigin(0.5).setDepth(1);
+      contBg.on("pointerover",  () => contBg.setFillStyle(0x80ffdd));
+      contBg.on("pointerout",   () => contBg.setFillStyle(0x00ffaa));
+      contBg.on("pointerdown",  () => contBg.setFillStyle(0x009966));
+      contBg.on("pointerup",    () => this.scene.start("GameScene", { level: savedLevel }));
 
-    this.input.keyboard!.once("keydown-SPACE", () => this.scene.start("GameScene", { level: 1 }));
-    this.input.keyboard!.once("keydown-ENTER", () => this.scene.start("GameScene", { level: 1 }));
+      // New Game button (secondary — clears save)
+      const newBg = this.add.rectangle(CANVAS_W / 2, 530, 200, 40, 0x1a1a3a)
+        .setStrokeStyle(1, 0x4444aa)
+        .setInteractive({ useHandCursor: true });
+      this.add.text(CANVAS_W / 2, 530, "NEW GAME", {
+        fontSize: "15px", color: "#8888bb", fontFamily: "monospace", fontStyle: "bold",
+      }).setOrigin(0.5).setDepth(1);
+      newBg.on("pointerover",  () => newBg.setFillStyle(0x252550));
+      newBg.on("pointerout",   () => newBg.setFillStyle(0x1a1a3a));
+      newBg.on("pointerdown",  () => newBg.setFillStyle(0x111130));
+      newBg.on("pointerup",    () => { clearProgress(); this.scene.start("GameScene", { level: 1 }); });
 
-    this.add.text(CANVAS_W / 2, 538, "or press Space / Enter", {
-      fontSize: "12px", color: "#555577", fontFamily: "monospace",
-    }).setOrigin(0.5);
+      this.input.keyboard!.once("keydown-SPACE", () => this.scene.start("GameScene", { level: savedLevel }));
+      this.input.keyboard!.once("keydown-ENTER", () => this.scene.start("GameScene", { level: savedLevel }));
+      this.add.text(CANVAS_W / 2, 562, "Space/Enter to continue · or click New Game to restart", {
+        fontSize: "11px", color: "#444466", fontFamily: "monospace",
+      }).setOrigin(0.5);
+    } else {
+      // No save — plain start button
+      const startBg = this.add.rectangle(CANVAS_W / 2, 500, 220, 54, 0x00e5ff)
+        .setInteractive({ useHandCursor: true });
+      this.add.text(CANVAS_W / 2, 500, "START GAME", {
+        fontSize: "20px", color: "#0a0a1a", fontFamily: "monospace", fontStyle: "bold",
+      }).setOrigin(0.5).setDepth(1);
+      startBg.on("pointerover",  () => startBg.setFillStyle(0x80ffff));
+      startBg.on("pointerout",   () => startBg.setFillStyle(0x00e5ff));
+      startBg.on("pointerdown",  () => startBg.setFillStyle(0x009ab0));
+      startBg.on("pointerup",    () => this.scene.start("GameScene", { level: 1 }));
+
+      this.input.keyboard!.once("keydown-SPACE", () => this.scene.start("GameScene", { level: 1 }));
+      this.input.keyboard!.once("keydown-ENTER", () => this.scene.start("GameScene", { level: 1 }));
+      this.add.text(CANVAS_W / 2, 538, "or press Space / Enter", {
+        fontSize: "12px", color: "#555577", fontFamily: "monospace",
+      }).setOrigin(0.5);
+    }
 
     // ── Settings button ───────────────────────────────────────────────────────
     const settingsBtn = this.add.text(CANVAS_W - 20, CANVAS_H - 20, "⚙  Settings", {
