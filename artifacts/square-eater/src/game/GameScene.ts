@@ -326,6 +326,7 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = true;
     const nextLevel = this.currentLevel + 1;
     saveProgress(nextLevel);  // advance save to the next level
+    playSfx(AUDIO_KEYS.victorySound);
     this.player.setFillStyle(0xffdd00);
     this.overlay.setFillStyle(0x000000, 0.6);
     this.overlayText.setText(`LEVEL ${this.currentLevel} CLEAR!`).setColor("#ffdd00");
