@@ -232,7 +232,9 @@ export class GameScene extends Phaser.Scene {
 
       if (npc.sizeCategory === "small") {
         toRemove.push(npc);
-        this.playerSize += 3;
+        // Cap growth in phase 1 so player never reaches the size of a big square
+        const PHASE1_MAX = Math.round(BASE_SIZE * 2.2) - 4; // just under bigSize (66) → 62
+        this.playerSize = Math.min(this.playerSize + 3, PHASE1_MAX);
         playSfx(AUDIO_KEYS.eatSound);
       } else {
         if (this.phase === "eat-big") {
