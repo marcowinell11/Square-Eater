@@ -1,0 +1,35 @@
+failed to load config from /opt/build/repo/artifacts/mockup-sandbox/vite.config.ts
+2:46:01 PM: error during build:
+2:46:01 PM: Error: PORT environment variable is required but was not provided.
+2:46:01 PM:     at file:///opt/build/repo/artifacts/mockup-sandbox/node_modules/.vite-temp/vite.config.ts.timestamp-1776883561479-50b4b5bfcf282.mjs:145:9
+2:46:01 PM:     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+2:46:01 PM:     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+2:46:01 PM:     at async loadConfigFromBundledFile (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:35909:12)
+2:46:01 PM:     at async bundleAndLoadConfigFile (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:35797:17)
+2:46:01 PM:     at async loadConfigFromFile (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:35764:42)
+2:46:01 PM:     at async resolveConfig (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:35413:22)
+2:46:01 PM:     at async createBuilder (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:33875:19)
+2:46:01 PM:     at async CAC.<anonymous> (file:///opt/build/repo/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/cli.js:629:10)
+2:46:01 PM: /opt/build/repo/artifacts/mockup-sandbox:
+2:46:01 PM:  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/mockup-sandbox@2.0.0 build: `vite build`
+2:46:01 PM: Exit status 1
+2:46:01 PM: ​
+2:46:01 PM: "build.command" failed                                        
+2:46:01 PM: ────────────────────────────────────────────────────────────────
+2:46:01 PM: ​
+2:46:01 PM:   Error message
+2:46:01 PM:   Command failed with exit code 1: pnpm --filter @workspace/mockup-sandbox... run build (https://ntl.fyi/exit-code-1)
+2:46:01 PM: ​
+2:46:01 PM:   Error location
+2:46:01 PM:   In Build command from Netlify app:
+2:46:01 PM:   pnpm --filter @workspace/mockup-sandbox... run build
+2:46:01 PM: ​
+2:46:01 PM:   Resolved config
+2:46:01 PM:   build:
+2:46:01 PM:     command: pnpm --filter @workspace/mockup-sandbox... run build
+2:46:01 PM:     commandOrigin: ui
+2:46:01 PM:     publish: /opt/build/repo/artifacts/mockup-sandbox/dist
+2:46:01 PM:     publishOrigin: ui
+2:46:01 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
+2:46:01 PM: Failing build: Failed to build site
+2:46:02 PM: Finished processing build request in 14.49s
