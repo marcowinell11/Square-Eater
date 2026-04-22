@@ -1,0 +1,8 @@
+[build]
+  command   = "pnpm --filter @workspace/square-eater... run build"
+  publish   = "artifacts/square-eater/dist/public"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
